@@ -2,11 +2,16 @@ from django.shortcuts import render , redirect
 from django.contrib.auth import login , logout , authenticate
 from django.contrib import messages
 from .forms import UserRegisterForm
+from django.http import JsonResponse
 
 # OTP
 from .utils import send_email_to_user
 from django.contrib.auth.models import User
 import random
+
+# Profile User
+from .models import AddressUser
+from .forms import AddressUserForm , UserProfileChange , ChangePAsswordUser
 
 # Create your views here.
 
@@ -107,3 +112,82 @@ def register_user(request):
             return redirect("login")
         
         return render(request,"accounts/login.html",{"form":form})
+
+def user_account(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            user_form = UserProfileChange(request.POST or None ,instance = request.user)
+            if user_form.is_valid():
+                user_form.save()
+                return redirect("my_account")
+
+        return render(request,"accounts/my-account.html",{})
+
+    else:
+        return redirect("login")
+
+def change_password(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = ChangePAsswordUser(request.user, request.POST or None)
+            
+            if form.is_valid():
+                form.save()
+                
+                login(request,request.user)
+                
+                return redirect("home")
+            
+        return redirect("my_account")
+    else:
+        return redirect("login")
+    
+
+def add_address(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            address_form = AddressUserForm(request.POST)
+            if address_form.is_valid():
+                address_form.instance.user = request.user 
+                address_form.save()
+                
+                return redirect("my_account")
+
+        
+        return redirect("my_account")
+    else:
+        return redirect("login")
+
+def delete_address(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            if request.POST.get("action") == 'post':
+                addrss_id = request.POST.get("address")
+                address = AddressUser.objects.filter(id = addrss_id)
+                
+                if address is not None:
+                    address.delete()
+                    return JsonResponse({"message":"success"})
+
+                return JsonResponse({"message":"notfound"})
+    
+    
+    return redirect("login")
+
+def update_address(request,id):
+    if request.user.is_authenticated:
+        address = AddressUser.objects.filter(id=id).first()
+        if request.method == 'POST':
+            if address is not None:
+                form_address = AddressUserForm(request.POST or None , instance= address)
+                if form_address.is_valid():
+                    form_address.save()
+                    return redirect("my_account")
+            else:
+                return redirect("my_account")
+                
+    
+        return render(request,"accounts/update-address.html",{"address":address})
+    else:
+        return redirect("login")
+                
