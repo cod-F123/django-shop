@@ -2,6 +2,7 @@ from django.shortcuts import render , redirect
 from django.http import Http404 , HttpResponse
 from .models import Product
 from .froms import CommentForm
+from django.utils.safestring import mark_safe
 
 # Create your views here.
 
@@ -24,6 +25,8 @@ def product_page(request, slug):
                     form.save()
             else:
                 return redirect("login")
+        
+        product.mini_description = mark_safe(product.mini_description)
     
         return render(request,"shop/product.html",{"product":product})
     

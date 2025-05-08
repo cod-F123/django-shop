@@ -149,7 +149,7 @@
     <div class="container-fluid">
       <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
         <h4 class="text-uppercase">Our New Arrivals</h4>
-        <a href="shop.html" class="btn-link">View All Products</a>
+        <a href="#" class="btn-link">View All Products</a>
       </div>
 
       <div data-aos="fade-in">
@@ -160,7 +160,7 @@
               <div class="product-item hover-effect-slide">
                 <div class="image-holder position-relative">
                   <a href="{% url 'product' product.slug %}">
-                    <img src="{{ product.image.url }}" alt="categories" class="product-image img-fluid">
+                    <img src="{{ product.image.url }}" alt="product" class="product-image img-fluid">
                     <div class="rating">
                       <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
                       <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
@@ -169,7 +169,7 @@
                       <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
                     </div>
                   </a>
-                  <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
+                  <button href="#" data-index="{{product.id}}" class="btn btn-primary w-100 mt-2 rounded-1 add-cart-mini">Add to cart</button>
                 </div>
                 <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
                   <h5 class="fs-5 mt-3">
@@ -204,7 +204,7 @@
             <div class="product-item hover-effect-slide">
               <div class="image-holder position-relative">
                 <a href="single-product.html">
-                  <img src="images/product-thumbnail-1.jpg" alt="categories" class="product-image img-fluid">
+                  <img src="{% static 'images/product-thumbnail-1.jpg' %}" alt="categories" class="product-image img-fluid">
                 </a>
                 <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
               </div>
@@ -220,7 +220,7 @@
             <div class="product-item hover-effect-slide">
               <div class="image-holder position-relative">
                 <a href="single-product.html">
-                  <img src="images/product-thumbnail-2.jpg" alt="categories" class="product-image img-fluid">
+                  <img src="{% static 'images/product-thumbnail-2.jpg' %}" alt="categories" class="product-image img-fluid">
                 </a>
                 <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
               </div>
@@ -229,102 +229,6 @@
                   <a href="single-product.html">Smart Phone 128GB RAM</a>
                 </h5>
                 <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="product-item hover-effect-slide">
-              <div class="image-holder position-relative">
-                <a href="single-product.html">
-                  <img src="images/product-thumbnail-3.jpg" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
-              </div>
-              <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                <h5 class="fs-5 mt-3">
-                  <a href="single-product.html">Smart Phone 128GB RAM</a>
-                </h5>
-                <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="product-item hover-effect-slide">
-              <div class="image-holder position-relative">
-                <a href="single-product.html">
-                  <img src="images/product-thumbnail-4.jpg" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
-              </div>
-              <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                <h5 class="fs-5 mt-3">
-                  <a href="single-product.html">Phone Cover 5.6 inches</a>
-                </h5>
-                <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="product-item hover-effect-slide">
-              <div class="image-holder position-relative">
-                <a href="single-product.html">
-                  <img src="images/product-thumbnail-5.jpg" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
-              </div>
-              <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                <h5 class="fs-5 mt-3">
-                  <a href="single-product.html">Smart Phone 128GB RAM</a>
-                </h5>
-                <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="product-item hover-effect-slide">
-              <div class="image-holder position-relative">
-                <a href="single-product.html">
-                  <img src="images/product-thumbnail-6.jpg" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
-              </div>
-              <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                <h5 class="fs-5 mt-3">
-                  <a href="single-product.html">Smart Phone 128GB RAM</a>
-                </h5>
-                <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="product-item hover-effect-slide">
-              <div class="image-holder position-relative">
-                <a href="single-product.html">
-                  <img src="images/product-thumbnail-7.jpg" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
-              </div>
-              <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                <h5 class="fs-5 mt-3">
-                  <a href="single-product.html">Smart Phone 128GB RAM</a>
-                </h5>
-                <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="product-item hover-effect-slide">
-              <div class="image-holder position-relative">
-                <a href="single-product.html">
-                  <img src="images/product-thumbnail-8.jpg" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
-              </div>
-              <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                <h5 class="fs-5 mt-3">
-                  <a href="single-product.html">22 Inch LED Display</a>
-                </h5>
-                <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$65.00</span></a>
               </div>
             </div>
           </div>

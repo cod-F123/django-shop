@@ -1,0 +1,205 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+
+    <!-- Cart Section -->
+    <section class="cart py-5">
+        <div class="container">
+            <div class="row">
+                <!-- Cart Items -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4 cart-len">Shopping Cart ({{cart|length}} items)</h4>
+                            
+                            <!-- Cart Item 1 -->
+                            {% for product in products %}
+                                <div class="cart-item mb-4 item-{{product.id}}">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-2">
+                                            <img src="{{product.image.url}}" alt="Product" class="img-fluid rounded">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h5 class="mb-1">{{product.name}}</h5>
+                                            {% if product.is_sale %}
+                                                <p class="text-muted mb-0">${{product.sale_price}}</p>
+                                            {% else %}
+                                                <p class="text-muted mb-0">${{product.price}}</p>
+                                            {% endif %}
+                                            {% comment %} <p class="text-muted mb-0">${{product.sale_price}}</p> {% endcomment %}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="input-group">
+                                                <button class="btn btn-outline-secondary de-btn" data-index="{{product.id}}" type="button">-</button>
+                                                {% for key,value in quantities.items %}
+                                                    {% if key == product.id|slugify %}
+                                                        <input type="text" class="form-control text-center q-{{product.id}}" max="99" min="1" maxlength="2" value="{{value}}">
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <button class="btn btn-outline-secondary in-btn" data-index="{{product.id}}" type="button">+</button>
+                                            </div>
+                                        </div>
+                                        
+                                        {% comment %} <div class="col-md-2">
+                                            {% if product.is_sale %}
+                                                <h6 class="mb-0 ms-3">${{product.sale_price}}</h6>
+                                            {% else %}
+                                                <h6 class="mb-0 ms-3">${{product.price}}</h6>
+                                            {% endif %}
+                                        </div>  {% endcomment %}
+                                        <div class="col-md-1 ms-5">
+                                            <button data-index="{{product.id}}" class="btn btn-link text-danger p-0 delete-item">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button data-index="{{product.id}}" class="btn btn-link text-primary p-0 ms-1 update-item">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
+                            <hr class="my-4">
+
+                            <!-- Cart Actions -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'home' %}" class="btn btn-outline-primary rounded">
+                                    <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                                </a>
+                                
+                                <form action="{% url 'clear_cart' %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger rounded clear-cart">
+                                        <i class="bi bi-trash me-2"></i>Clear Cart
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Order Summary</h4>
+                            
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Subtotal</span>
+                                <span class="sub-t">${{total}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Shipping</span>
+                                <span>Free</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Tax</span>
+                                <span>$0.00</span>
+                            </div> 
+                            
+                            <hr>
+                            
+                            <div class="d-flex justify-content-between mb-4">
+                                <strong>Total</strong>
+                                <strong class="text-primary total">${{total}}</strong>
+                            </div>
+
+                            <!-- Coupon Code -->
+                            {% comment %} <div class="mb-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Coupon code">
+                                    <button class="btn btn-primary">Apply</button>
+                                </div>
+                            </div> {% endcomment %}
+
+                            <button class="btn btn-primary btn-lg mb-3">
+                                Proceed to Checkout
+                            </button>
+                            
+                            <div class="text-center">
+                                <img src="{% static 'images/paypal-card.png' %}" alt="Payment Methods" class="img-fluid" style="max-height: 30px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+        $(document).on("click",".delete-item",function(e){
+            e.preventDefault();
+            let prodID = $(this).data("index");
+
+            $.ajax({
+                type : 'POST',
+                url : "{% url 'delete_cart' %}",
+                data : {
+                    proId : prodID,
+                    csrfmiddlewaretoken : "{{csrf_token}}",
+                    action : 'post'
+                },
+                success : function(res){
+                    document.getElementsByClassName("cart-len")[0].innerHTML = res.cart_len;
+                    document.getElementsByClassName("cart-len")[1].innerHTML = `Shopping Cart (${res.cart_len}) items)`;
+                    document.getElementsByClassName("total")[0].innerHTML = `$${res.total}`;
+                    document.getElementsByClassName("sub-t")[0].innerHTML = `$${res.total}`;
+                    let idIndex = `item-${prodID}`;
+                    document.getElementsByClassName(idIndex)[0].style.display = "none";
+                },
+                error : function(xhr, errmg ,err){
+                    console.log(err);
+                }
+            })
+        })
+        $(document).on("click",".update-item",function(e){
+            e.preventDefault();
+            let proID = $(this).data("index");
+            let qty = $(`.q-${proID}`).val();
+
+            $.ajax({
+                type : "POST",
+                url : "{% url 'update_cart' %}",
+                data : {
+                    proId : proID,
+                    proQty : qty,
+                    csrfmiddlewaretoken : "{{csrf_token}}",
+                    action : 'post'
+                },
+                success : function(res){
+                    document.getElementsByClassName("total")[0].innerHTML = `$${res.total}`;
+                    document.getElementsByClassName("sub-t")[0].innerHTML = `$${res.total}`;
+                },
+                error : function(xhr,errmg,err){
+                    console.log(err);
+                }
+            })
+        })
+    </script>
+    <script>
+        $(document).on("click",".in-btn",function(e){
+            e.preventDefault();
+            let indexD = $(this).data("index");
+            let qty = Number($(`.q-${indexD}`).val());
+      
+            if(qty < 100){
+              $(`.q-${indexD}`).val(qty + 1);
+            }
+          })
+          $(document).on("click",".de-btn",function(e){
+            e.preventDefault();
+            let indexD = $(this).data("index");
+            let qty = Number($(`.q-${indexD}`).val());
+      
+            if(qty > 1){
+              $(`.q-${indexD}`).val(qty - 1);
+            }
+          })
+    </script>
+{% endblock content %}

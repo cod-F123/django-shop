@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import random
+
 # Create your models here.
 
 class Category(models.Model):
@@ -38,9 +39,9 @@ class Product(models.Model):
             sale_p = self.price - (self.price * self.discount / 100)
             return sale_p
     
-    
     def save(self,*args,**kwags):
         super().save(*args,*kwags)
+        
         if not self.slug:
             random_num = random.randint(10000,99999)
             self.slug = str(self.name) + str(self.factory) + str(random_num)

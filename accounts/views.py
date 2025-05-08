@@ -13,6 +13,11 @@ import random
 from .models import AddressUser
 from .forms import AddressUserForm , UserProfileChange , ChangePAsswordUser
 
+# cart
+from cart.cart import Cart
+from .models import Profile
+import json
+
 # Create your views here.
 
 def login_user(request):
@@ -24,6 +29,17 @@ def login_user(request):
         
         if user is not None:
             login(request,user)
+            
+            current_user = Profile.objects.get(user__id = request.user.id)
+            saved_cart = current_user.old_cart
+            
+            if saved_cart:
+                saved_cart = json.loads(saved_cart)
+                cart = Cart(request)
+                
+                for key , value in saved_cart.items():
+                    cart.db_add(product=key,quantity=value)
+                    
             
             return redirect("home")
         
@@ -45,7 +61,7 @@ def create_code(email):
         random_number = random.randint(10000,99999)
         
         users[email] = random_number
-        print(users)
+    
         return random_number
     
     return redirect("verifi_otp")
@@ -112,6 +128,9 @@ def register_user(request):
             return redirect("login")
         
         return render(request,"accounts/login.html",{"form":form})
+    
+    else:
+        return redirect("home")
 
 def user_account(request):
     if request.user.is_authenticated:
