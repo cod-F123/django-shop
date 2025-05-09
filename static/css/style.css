@@ -3772,3 +3772,26 @@ a.btn-link.text-light:after {
     font-size: 1.5rem;
   }
 }
+
+.shadow-light{
+  box-shadow: 0px 0px 10px #fff;
+}
+
+
+::-webkit-scrollbar{
+    width: 5px;
+    height: 3px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track{
+    background-color: #0A192F;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

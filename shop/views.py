@@ -32,3 +32,9 @@ def product_page(request, slug):
     
     else:
         return HttpResponse("not found")
+    
+    
+
+def shop_page(request):
+    products = Product.objects.all()
+    return render(request,"shop/shop.html",{"products":products})
