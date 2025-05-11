@@ -55,7 +55,7 @@
                       <div class="card bg-primary text-white">
                         <div class="card-body">
                           <h6 class="card-title">Total Orders</h6>
-                          <h2 class="mb-0">5</h2>
+                          <h2 class="mb-0">{{user.order_set.all.count}}</h2>
                         </div>
                       </div>
                     </div>
@@ -89,20 +89,21 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>#12345</td>
-                          <td>2024-02-20</td>
-                          <td><span class="badge bg-success">Delivered</span></td>
-                          <td>$299.99</td>
-                          <td><a href="#" class="btn btn-sm btn-primary">View</a></td>
-                        </tr>
-                        <tr>
-                          <td>#12344</td>
-                          <td>2024-02-15</td>
-                          <td><span class="badge bg-warning">Processing</span></td>
-                          <td>$199.99</td>
-                          <td><a href="#" class="btn btn-sm btn-primary">View</a></td>
-                        </tr>
+                        {% for order in user.order_set.all %}
+                          <tr>
+                            <td>#{{order.id}}</td>
+                            <td>order.date_ordered</td>
+                            {% if oreder.order_status == "cancelled" or order.order_status == "pending" %}
+                              <td><span class="badge bg-danger">{{order.status}}</span></td>
+                            {% elif order.order_status == "processing" %}
+                              <td><span class="badge bg-warning">Processing</span></td>
+                            {% else %}
+                              <td><span class="badge bg-success">{{order.order_status}}</span></td>
+                            {% endif %}
+                            <td>${{order.amount}}</td>
+                            <td><a href="{% url 'order' order.id %}" class="btn btn-sm btn-primary">View</a></td>
+                          </tr>
+                        {% endfor %}
                       </tbody>
                     </table>
                   </div>
@@ -127,28 +128,21 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>#12345</td>
-                          <td>2024-02-20</td>
-                          <td><span class="badge bg-success">Delivered</span></td>
-                          <td>$299.99</td>
-                          <td><a href="#" class="btn btn-sm btn-primary">View</a></td>
-                        </tr>
-                        <tr>
-                          <td>#12344</td>
-                          <td>2024-02-15</td>
-                          <td><span class="badge bg-warning">Processing</span></td>
-                          <td>$199.99</td>
-                          <td><a href="#" class="btn btn-sm btn-primary">View</a></td>
-                        </tr>
-                        <tr>
-                          <td>#12343</td>
-                          <td>2024-02-10</td>
-                          <td><span class="badge bg-danger">Cancelled</span></td>
-                          <td>$149.99</td>
-                          <td><a href="#" class="btn btn-sm btn-primary">View</a></td>
-                        </tr>
-                      </tbody>
+                        {% for order in user.order_set.all %}
+                          <tr>
+                            <td>#{{order.id}}</td>
+                            <td>order.date_ordered</td>
+                            {% if oreder.order_status == "delivered" %}
+                              <td><span class="badge bg-success">Delivered</span></td>
+                            {% elif order.order_status == "processing" %}
+                              <td><span class="badge bg-warning">Processing</span></td>
+                            {% else %}
+                              <td><span class="badge bg-danger">{{order.order_status}}</span></td>
+                            {% endif %}
+                            <td>${{order.amount}}</td>
+                            <td><a href="{% url 'order' order.id %}" class="btn btn-sm btn-primary">View</a></td>
+                          </tr>
+                        {% endfor %}
                     </table>
                   </div>
                 </div>
