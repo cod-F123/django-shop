@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +27,8 @@ SECRET_KEY = 'django-insecure-jolx3d$i$k#2%!y_)$_4n^t4%-c36#&#lf)1%ne**7&9l+)8us
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["https://glad-cobra-warm.ngrok-free.app"]
 
 
 # Application definition
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'cart',
     'payment',
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +150,9 @@ EMAIL_HOST_PASSWORD = '****************'
 DEFAULT_FROM_EMAIL = 'yourgmail@gmail.com'
 EMAIL_TIMEOUT = 30 
 EMAIL_CONNECTION_TIMEOUT = 10
+
+
+# Paypal Config
+load_dotenv(str(BASE_DIR/".env"))
+PAYPAL_RECEIVER_EMAIL = os.getenv("PAYPAL_RECEIVER_EMAIL")
+PAYPAL_TEST = True

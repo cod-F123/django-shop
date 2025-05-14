@@ -1,31 +1,65 @@
 from django.shortcuts import render , redirect , get_object_or_404
+from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Order , OrderItem
 from accounts.models import AddressUser , Profile
 from cart.cart import Cart
+from django.contrib import messages
+import uuid  
+from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings
 
 # Create your views here.
 
+PAYPAL_RECEIVER_EMAIL = settings.PAYPAL_RECEIVER_EMAIL
+
 def order_page(request,id):
     order = get_object_or_404(Order,id=id) 
+    if order.user.id == request.user.id:
+        invoice = uuid.uuid4()
+        
+        order.invoice = str(invoice)
+        order.save()
+        print(request.build_absolute_uri(reverse('paypal-ipn')))
+        paypal_dict = {
+            "business" : PAYPAL_RECEIVER_EMAIL,
+            "amount" : str(order.amount),
+            "item_name": "Product",
+            "invoice": str(invoice),
+            "currency_code": "USD",
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return_url": request.build_absolute_uri(reverse('payment-success')),
+            "cancel_return": request.build_absolute_uri(reverse('payment-cancel')),
+        }
+        
+        form = PayPalPaymentsForm(initial=paypal_dict)
+        
+        return render(request,"payment/order.html",{"order":order,"form":form})
     
-    return render(request,"payment/order.html",{"order":order})
+    messages.success(request,"Access Diend !")
+
+    return redirect("home")
+
+
 
 def checkout_page(request):
     if request.user.is_authenticated:
-        if request.method == 'POST':
-            address_list = AddressUser.objects.filter(user_id = request.user.id) 
-            
-            if address_list:
+        if len(Cart(request)) != 0:
+            if request.method == 'POST':
+                address_list = AddressUser.objects.filter(user_id = request.user.id) 
                 
-                return render(request,"payment/checkout.html",{"address_list":address_list})
+                if address_list:
+                    
+                    return render(request,"payment/checkout.html",{"address_list":address_list})
 
-            return redirect("my_account")
+                return redirect("my_account")
+        
+    messages.success(request,"Access Diend !")
     
     return redirect("home")
 
 
-def payment(request):
+def payment_new_order(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             cart = Cart(request)
@@ -49,11 +83,19 @@ def payment(request):
                 if "session_key" == key:
                     del request.session[key]
             
+            return redirect(reverse("order",args=[new_order.id]))
+                        
             
-            return redirect("home")
-    
+    messages.success(request,"Access Diend !")
     return redirect("home")
 
 
-def pay_callback(request):
-    pass
+def paymetn_success(request):
+    payer_id = request.GET.get("PayerID")
+    
+    order = Order.objects.filter(payer_id = payer_id).first()
+    
+    return render(request,"payment/payment-success.html",{"order":order})
+
+def payment_cancel(request):
+    return render(request,"payment/payment-cancel.html")

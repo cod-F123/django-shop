@@ -89,16 +89,17 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for order in user.order_set.all %}
+                       {% for order in user.order_set.all %}
                           <tr>
                             <td>#{{order.id}}</td>
-                            <td>order.date_ordered</td>
-                            {% if oreder.order_status == "cancelled" or order.order_status == "pending" %}
-                              <td><span class="badge bg-danger">{{order.status}}</span></td>
+                            <td>{{order.date_ordered}}</td>
+                            
+                            {% if oreder.order_status == "delivered" %}
+                              <td><span class="badge bg-success">Delivered</span></td>
                             {% elif order.order_status == "processing" %}
                               <td><span class="badge bg-warning">Processing</span></td>
                             {% else %}
-                              <td><span class="badge bg-success">{{order.order_status}}</span></td>
+                              <td><span class="badge bg-danger">{{order.order_status}}</span></td>
                             {% endif %}
                             <td>${{order.amount}}</td>
                             <td><a href="{% url 'order' order.id %}" class="btn btn-sm btn-primary">View</a></td>
@@ -131,7 +132,8 @@
                         {% for order in user.order_set.all %}
                           <tr>
                             <td>#{{order.id}}</td>
-                            <td>order.date_ordered</td>
+                            <td>{{order.date_ordered}}</td>
+                            
                             {% if oreder.order_status == "delivered" %}
                               <td><span class="badge bg-success">Delivered</span></td>
                             {% elif order.order_status == "processing" %}

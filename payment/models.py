@@ -4,9 +4,12 @@ from django.db.models.signals import pre_save
 from shop.models import Product
 from accounts.models import AddressUser
 from django.dispatch import receiver
-import datetime
+from django.utils import timezone
+from paypal.standard.ipn.models import PayPalIPN
 
 # Create your models here.
+class Payment(models.Model):
+    ipn = models.ForeignKey(PayPalIPN, on_delete=models.SET_NULL, null=True)
 
 class Order(models.Model):
     STATUS_ORDER = (
@@ -23,10 +26,12 @@ class Order(models.Model):
     shiped_date = models.DateTimeField(blank=True,null=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
     date_payed = models.DateTimeField(blank=True,null=True)
+    invoice = models.CharField(blank=True,null=True)
+    payer_id = models.CharField(blank=True,null=True)
     
     order_status = models.CharField(choices=STATUS_ORDER,default="pending")
     
-    amount = models.IntegerField(default=0)
+    amount = models.DecimalField(max_digits=10,decimal_places=2)
     
     def __str__(self):
         return f"{self.user} - {self.id}"
@@ -35,17 +40,16 @@ class Order(models.Model):
 @receiver(pre_save,sender=Order)
 def set_time(sender, instance, **kwargs):
     if instance.pk :
-        now = datetime.datetime.now()
+        now = timezone.now()
         obj = sender._default_manager.get(pk=instance.pk)
         if (instance.order_status == "processing") and not (obj.order_status == "processing"):
-            instance.date_payed = now 
+            instance.date_payed = now
+             
         
         elif (instance.order_status == "delivered") and not (obj.order_status == "delivered"):
             instance.shiped_date = now 
-        
-        else:
-            instance.shiped_date = None
-            instance.date_payed = None
+            
+            
 
 
 class OrderItem(models.Model):

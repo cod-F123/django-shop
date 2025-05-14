@@ -1,6 +1,6 @@
 from django.shortcuts import render , redirect
 from django.http import Http404 , HttpResponse
-from .models import Product
+from .models import Product , Category
 from .froms import CommentForm
 from django.utils.safestring import mark_safe
 
@@ -37,4 +37,5 @@ def product_page(request, slug):
 
 def shop_page(request):
     products = Product.objects.all()
-    return render(request,"shop/shop.html",{"products":products})
+    categories = Category.objects.all()
+    return render(request,"shop/shop.html",{"products":products,"categories":categories})

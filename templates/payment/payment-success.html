@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-9 col-xs-12">
+                <div id="time" class="text-center mb-2">3</div>
+                <p class="bg-success text-light p-2 py-4 rounded">Payment Successfuly ! order id : {{order.id}}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(()=>{
+            window.location.href = "{% url 'order' order.id %}"
+        },3000)
+        setInterval(()=>{
+            document.getElementById("time").innerHTML = Number(document.getElementById("time").innerHTML) - 1;
+        },1000)
+    </script>
+{% endblock content %}
+    

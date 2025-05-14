@@ -124,6 +124,9 @@ def register_user(request):
                 if user is not None:
                     login(request,user)
                     return redirect("home")
+            
+            for error in list(form.errors.values()):
+                messages.error(request,error)
                 
             return redirect("login")
         
@@ -140,6 +143,8 @@ def user_account(request):
                 user_form.save()
                 return redirect("my_account")
 
+            for error in list(user_form.errors.values()):
+                messages.error(request,error)
         return render(request,"accounts/my-account.html",{})
 
     else:
@@ -156,7 +161,9 @@ def change_password(request):
                 login(request,request.user)
                 
                 return redirect("home")
-            
+            for error in list(form.errors.values()):
+                messages.error(request,error)
+                
         return redirect("my_account")
     else:
         return redirect("login")
