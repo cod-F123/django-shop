@@ -18,7 +18,6 @@ class Category(models.Model):
         return self.name
 
 
-
 class Product(models.Model):
     name = models.CharField(max_length=255)
     mini_description = models.TextField()
@@ -29,6 +28,8 @@ class Product(models.Model):
     
     slug = models.SlugField(unique=True,blank=True,null=True)
     
+    count_rating = models.IntegerField(default=0)
+    
     price = models.IntegerField(default=0)
     discount = models.IntegerField(default=0)
     is_sale = models.BooleanField(default=False)
@@ -38,6 +39,14 @@ class Product(models.Model):
         if self.is_sale:
             sale_p = self.price - (self.price * self.discount / 100)
             return sale_p
+    
+    @property
+    def rating(self):
+        count_rate = Comment.objects.filter(product_id = self.id).count()
+        if count_rate != 0 :
+            return self.count_rating / count_rate
+        else:
+            return 0
     
     def save(self,*args,**kwags):
         super().save(*args,*kwags)
@@ -85,7 +94,23 @@ class Comment(models.Model):
     title = models.CharField(max_length=40)
     comment = models.TextField()
     
+    rating = models.IntegerField(default=5)
+    
     date_created = models.DateTimeField(auto_now_add=True)
+    
+    def save(self,*args,**kwargs):
+        super().save(*args,**kwargs)
+        product = Product.objects.get(id=self.product.id) 
+        product.count_rating += self.rating
+        product.save()
     
     def __str__(self):
         return self.user.username
+    
+    
+class WishedProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete= models.CASCADE)
+    user = models.ForeignKey(User, on_delete= models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.id}"

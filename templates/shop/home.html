@@ -105,38 +105,38 @@
     <div class="container-fluid">
       <div class="row g-5">
         <div class="col-md-3">
-          <span class="d-block py-3 text-white text-uppercase fs-7 ls-1">01. Electronic Gadgets</span>
+          <span class="d-block py-3 text-white text-uppercase fs-7 ls-1">01. Personal Camputers</span>
           <div class="jarallax position-relative mb-4" style="height: 480px;">
-            <img src="{% static 'images/category-thumb-1.jpg' %}" alt="categories" class="jarallax-img img-fluid">
+            <img src="{% static 'images/category-thumb-4.jpg' %}" alt="categories" class="jarallax-img img-fluid">
             <div class="category-content position-absolute bottom-0 p-5 text-uppercase">
               <a href="shop-four-column-wide.html" class="text-white btn-link">Shop it Now</a>
             </div>
           </div>
         </div>
         <div class="col-md-2">
-          <span class="d-block py-3 text-white text-uppercase fs-7 ls-1">02. Cool Stuff</span>
+          <span class="d-block py-3 text-white text-uppercase fs-7 ls-1">02. Smart Phone</span>
           <div class="jarallax position-relative mb-3" style="height: 480px;">
             <img src="{% static 'images/category-thumb-2.jpg' %}" alt="categories" class="jarallax-img img-fluid">
             <div class="category-content position-absolute bottom-0 p-5 text-uppercase">
-              <a href="shop-four-column-wide.html" class="text-white btn-link">Shop it Now</a>
+              <a href="{% url 'category' 'phone' %}" class="text-white btn-link">Shop it Now</a>
             </div>
           </div>
         </div>
         <div class="col-md-5">
-          <span class="d-block py-3 text-white text-uppercase fs-7 ls-1">03. Accessories</span>
+          <span class="d-block py-3 text-white text-uppercase fs-7 ls-1">03. Tv</span>
           <div class="jarallax position-relative mb-3" style="height: 480px;">
             <img src="{% static 'images/category-thumb-3.jpg' %}" alt="categories" class="jarallax-img img-fluid">
             <div class="category-content position-absolute bottom-0 p-5 text-uppercase">
-              <a href="shop-four-column-wide.html" class="text-white btn-link">Shop it Now</a>
+              <a href="{% url 'category' 'tv' %}" class="text-white btn-link">Shop it Now</a>
             </div>
           </div>
         </div>
         <div class="col-md-2">
-          <span class="d-block py-3 text-white text-uppercase fs-7 ls-1">04. Display Units</span>
+          <span class="d-block py-3 text-white text-uppercase fs-7 ls-1">04. Watch</span>
           <div class="jarallax position-relative mb-3" style="height: 480px;">
-            <img src="{% static 'images/category-thumb-4.jpg' %}" alt="categories" class="jarallax-img img-fluid">
+            <img src="{% static 'images/OIP.webp' %}" alt="categories" class="jarallax-img img-fluid">
             <div class="category-content position-absolute bottom-0 p-5 text-uppercase">
-              <a href="shop-four-column-wide.html" class="text-white btn-link">Shop it Now</a>
+              <a href="{% url 'category' 'watch' %}" class="text-white btn-link">Shop it Now</a>
             </div>
           </div>
         </div>
@@ -162,11 +162,19 @@
                   <a href="{% url 'product' product.slug %}">
                     <img src="{{ product.image.url }}" alt="product" class="product-image img-fluid">
                     <div class="rating">
-                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      {% if product.rating > 0 %}
+                          {% with " "|center:product.rating as range %}
+                              {% for _ in range %}
+                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                              {% endfor %}
+                          {% endwith %}
+                      {% else %}
+                          <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                          <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                          <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                          <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                          <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      {% endif %}
                     </div>
                   </a>
                   <button href="#" data-index="{{product.id}}" class="btn btn-primary w-100 mt-2 rounded-1 add-cart-mini">Add to cart</button>
@@ -194,44 +202,31 @@
     class="best-sellers py-5 mb-5">
     <div class="container-fluid">
       <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
-        <h4 class="text-uppercase">Best Sellers</h4>
-        <a href="shop.html" class="btn-link">View All Products</a>
+        <h4 class="text-uppercase">Most Discount</h4>
+        <a href="{% url 'shop' %}" class="btn-link">View All Products</a>
       </div>
 
       <div data-aos="fade-in">
         <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4">
-          <div class="col">
-            <div class="product-item hover-effect-slide">
-              <div class="image-holder position-relative">
-                <a href="single-product.html">
-                  <img src="{% static 'images/product-thumbnail-1.jpg' %}" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
-              </div>
-              <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                <h5 class="fs-5 mt-3">
-                  <a href="single-product.html">Phone Cover 5.6 inches</a>
-                </h5>
-                <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="product-item hover-effect-slide">
-              <div class="image-holder position-relative">
-                <a href="single-product.html">
-                  <img src="{% static 'images/product-thumbnail-2.jpg' %}" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
-              </div>
-              <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                <h5 class="fs-5 mt-3">
-                  <a href="single-product.html">Smart Phone 128GB RAM</a>
-                </h5>
-                <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
+          {% for product in d_products %}
+            <div class="col">
+              <div class="product-item hover-effect-slide">
+                <div class="image-holder position-relative">
+                  <a href="{% url 'product' product.slug %}">
+                    <img src="{{product.image.url}}" alt="product" class="product-image img-fluid">
+                  </a>
+                  <button data-index="{{product.id}}"  class="btn btn-primary w-100 mt-2 rounded-1 add-cart-mini">Add to cart</button>
+                </div>
+                <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                  <h5 class="fs-5 mt-3">
+                    <a href="{% url 'product' product.slug %}">{{product.name}}</a>
+                  </h5>
+                  <a  class="text-decoration-none" ><span>${{product.sale_price}}</span></a>
+                  <a  class="text-decoration-line-through" ><span>${{product.price}}</span></a>
+                </div>
               </div>
             </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
     </div>
@@ -254,10 +249,9 @@
             </div>
             <div class="row mb-5">
               <div class="col-md-12">
-                <form id="form" class="d-flex flex-row gap-0">
-                  <input type="text" name="email" placeholder="Your Email Addresss" class="form-control rounded-0 rounded-start">
-                  <button class="btn btn-primary text-uppercase rounded-0 rounded-end px-5">Sign Up</button>
-                </form>
+                <div class="d-flex justify-content-center flex-row gap-0">
+                  <a href="{% url 'login' %}" class="btn btn-primary text-uppercase rounded px-5">Sign Up</a>
+                </div>
               </div>
             </div>
           </div>

@@ -20,7 +20,7 @@ def order_page(request,id):
         
         order.invoice = str(invoice)
         order.save()
-        print(request.build_absolute_uri(reverse('paypal-ipn')))
+        
         paypal_dict = {
             "business" : PAYPAL_RECEIVER_EMAIL,
             "amount" : str(order.amount),

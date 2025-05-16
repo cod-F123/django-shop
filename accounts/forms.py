@@ -18,7 +18,7 @@ class AddressUserForm(forms.ModelForm):
 class UserProfileChange(UserChangeForm):
     class Meta:
         model = User 
-        fields = ["first_name","last_name","email","username"]
+        fields = ["first_name","last_name","username"]
         
 class ChangePAsswordUser(PasswordChangeForm):
     class Meta:

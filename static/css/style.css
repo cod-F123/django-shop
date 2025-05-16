@@ -3794,4 +3794,11 @@ a.btn-link.text-light:after {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
-  }
+}
+
+
+
+
+.hidden{
+  display: none;
+}

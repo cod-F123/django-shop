@@ -2,7 +2,8 @@ from django.shortcuts import render , redirect
 from django.contrib.auth import login , logout , authenticate
 from django.contrib import messages
 from .forms import UserRegisterForm
-from django.http import JsonResponse
+from django.http import JsonResponse 
+from payment.models import Order
 
 # OTP
 from .utils import send_email_to_user
@@ -114,16 +115,20 @@ def register_user(request):
             form = UserRegisterForm(request.POST)
             
             if form.is_valid():
-                form.save()
+                current_user = User.objects.filter(email = form.cleaned_data["email"]).exists()
                 
-                username = form.cleaned_data["username"]
-                password = form.cleaned_data["password2"]
-                
-                user = authenticate(username=username,password=password)
-                
-                if user is not None:
-                    login(request,user)
-                    return redirect("home")
+                if not current_user:
+                    form.save()
+                    username = form.cleaned_data["username"]
+                    password = form.cleaned_data["password2"]
+                    
+                    user = authenticate(username=username,password=password)
+                    
+                    if user is not None:
+                        login(request,user)
+                        return redirect("home")
+                else:
+                    form.add_error("email",f"user with {form.cleaned_data["email"]} currently exist ! please try with another email . ")
             
             for error in list(form.errors.values()):
                 messages.error(request,error)
@@ -145,7 +150,11 @@ def user_account(request):
 
             for error in list(user_form.errors.values()):
                 messages.error(request,error)
-        return render(request,"accounts/my-account.html",{})
+        
+        context = {}
+            
+        return render(request,"accounts/my-account.html",context)
+
 
     else:
         return redirect("login")
@@ -216,4 +225,12 @@ def update_address(request,id):
         return render(request,"accounts/update-address.html",{"address":address})
     else:
         return redirect("login")
+    
+
+def dashbord(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        pass 
+    
+    else:
+        return redirect("home")
                 

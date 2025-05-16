@@ -72,11 +72,19 @@
                                 <img src="{{product.image.url}}" alt="categories" class="product-image rounded img-fluid">
                                 
                                 <div class="rating">
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% if product.rating > 0 %}
+                                        {% with " "|center:product.rating as range %}
+                                            {% for _ in range %}
+                                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    {% else %}
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% endif %}
                                 </div>
                                 </a>
                             </div>
@@ -126,11 +134,19 @@
                                 <img src="{{product.image.url}}" alt="categories" class="product-image rounded img-fluid">
                                 
                                 <div class="rating">
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% if product.rating > 0 %}
+                                        {% with " "|center:product.rating as range %}
+                                            {% for _ in range %}
+                                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    {% else %}
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% endif %}
                                 </div>
                                 </a>
                             </div>
@@ -167,14 +183,14 @@
           
           {% for category in categories %}
                 <div class="col-md-4 mb-4">
-                    <div class="card h-100">
+                    <div class="d-flex flex-column h-100 position-relative ">
+                        <a href="{% url 'category' category.name %}">
+                            <img src="{{category.image.url}}" alt="" class="img-fluid rounded">
+                        </a>
+                        <p class="h5 position-absolute bottom-0 bg-danger px-2 py-1 rounded ms-1" style="cursor:pointer;">{{category.name}}</p>
+                    </div>
+                    {% comment %} <div class="card h-100">
                         <div class="card-body">
-                            {% comment %} <div class="d-flex justify-content-between align-items-start mb-3">
-                                <img src="{% static 'images/product-small-1.jpg' %}" alt="Product" class="img-fluid product-image" style="max-height: 150px;">
-                                <button class="btn btn-link text-danger p-0">
-                                <i class="bi bi-heart-fill"></i>
-                                </button>
-                            </div> {% endcomment %}
                             <div class="image-holder position-relative">
                                 <a href="">
                                 <img src="{{category.image.url}}" alt="categories" class="product-image rounded img-fluid">
@@ -182,7 +198,7 @@
                             </div>
                             <h5 class="card-title">{{category.name}}</h5>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
           {% endfor %}
             
@@ -219,11 +235,19 @@
                                 <img src="{{product.image.url}}" alt="categories" class="product-image rounded img-fluid">
                                 
                                 <div class="rating">
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% if product.rating > 0 %}
+                                        {% with " "|center:product.rating as range %}
+                                            {% for _ in range %}
+                                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    {% else %}
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% endif %}
                                 </div>
                                 </a>
                             </div>
@@ -274,11 +298,19 @@
                                 <img src="{{product.image.url}}" alt="categories" class="product-image rounded img-fluid">
                                 
                                 <div class="rating">
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% if product.rating > 0 %}
+                                        {% with " "|center:product.rating as range %}
+                                            {% for _ in range %}
+                                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    {% else %}
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% endif %}
                                 </div>
                                 </a>
                             </div>
@@ -329,11 +361,19 @@
                                 <img src="{{product.image.url}}" alt="categories" class="product-image rounded img-fluid">
                                 
                                 <div class="rating">
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% if product.rating > 0 %}
+                                        {% with " "|center:product.rating as range %}
+                                            {% for _ in range %}
+                                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    {% else %}
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    {% endif %}
                                 </div>
                                 </a>
                             </div>

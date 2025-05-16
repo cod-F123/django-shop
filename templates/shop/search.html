@@ -1,0 +1,73 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 bg-dark d-flex align-items-center justify-content-center rounded-2" style="height:200px"><p class="text-center h3">searched {{search}}</p></div>
+        </div>
+    </div>
+
+    {% if searcheds %}
+
+        <section id="new-arrival"
+            class="new-arrival py-5">
+            <div class="container-fluid">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
+                <h4 class="text-uppercase">Result</h4>
+            </div>
+
+            <div data-aos="fade-in">
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+                
+                {% for product in searcheds %}
+                    <div class="col">
+                    <div class="product-item hover-effect-slide">
+                        <div class="image-holder position-relative">
+                        <a href="{% url 'product' product.slug %}">
+                            <img src="{{ product.image.url }}" alt="product" class="product-image img-fluid">
+                            <div class="rating">
+                                {% if product.rating > 0 %}
+                                    {% with " "|center:product.rating as range %}
+                                        {% for _ in range %}
+                                        <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                                        {% endfor %}
+                                    {% endwith %}
+                                {% else %}
+                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                {% endif %}
+                            </div>
+                        </a>
+                        <button href="#" data-index="{{product.id}}" class="btn btn-primary w-100 mt-2 rounded-1 add-cart-mini">Add to cart</button>
+                        </div>
+                        <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                        <h5 class="fs-5 mt-3">
+                            <a href="{% url 'product' product.slug %}">{{product.name}}</a>
+                        </h5>
+                        {% if product.is_sale %}
+                            <span> {{ product.sale_price }} $</span>
+                        {% else %}
+                            <span>{{ product.price }} $</span>
+                        {% endif %}
+                        </div>
+                    </div>
+                    </div>
+                {% endfor %}
+                    
+                    
+                </div>
+            </div>
+            </div>
+        </section>
+    {% else %}
+        <p class="h4 mt-5 text-center">No Result ! try another .</p>
+    {% endif %}
+
+  
+{% endblock content %}
+    

@@ -63,7 +63,7 @@
                       <div class="card bg-success text-white">
                         <div class="card-body">
                           <h6 class="card-title">Wishlist Items</h6>
-                          <h2 class="mb-0">3</h2>
+                          <h2 class="mb-0" id="wished-count">{{user.wishedproduct_set.all.count}}</h2>
                         </div>
                       </div>
                     </div>
@@ -88,18 +88,19 @@
                           <th>Action</th>
                         </tr>
                       </thead>
+                      
                       <tbody>
                        {% for order in user.order_set.all %}
                           <tr>
                             <td>#{{order.id}}</td>
                             <td>{{order.date_ordered}}</td>
                             
-                            {% if oreder.order_status == "delivered" %}
-                              <td><span class="badge bg-success">Delivered</span></td>
-                            {% elif order.order_status == "processing" %}
-                              <td><span class="badge bg-warning">Processing</span></td>
+                            {% if order.order_status == "delivered" %}
+                              <td><span class="badge bg-success" >{{order.order_status}}</span></td>
+                            {% elif order.order_status == 'processing' %}
+                              <td><span class="badge bg-warning" >{{order.order_status}}</span></td>
                             {% else %}
-                              <td><span class="badge bg-danger">{{order.order_status}}</span></td>
+                              <td><span class="badge bg-danger" >{{order.order_status}}</span></td>
                             {% endif %}
                             <td>${{order.amount}}</td>
                             <td><a href="{% url 'order' order.id %}" class="btn btn-sm btn-primary">View</a></td>
@@ -116,7 +117,7 @@
             <div class="tab-pane fade" id="orders">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title mb-4">My Orders</h4>
+                  <h4 class="card-title mb-4 me-0">My Orders</h4>
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
@@ -134,12 +135,12 @@
                             <td>#{{order.id}}</td>
                             <td>{{order.date_ordered}}</td>
                             
-                            {% if oreder.order_status == "delivered" %}
-                              <td><span class="badge bg-success">Delivered</span></td>
-                            {% elif order.order_status == "processing" %}
-                              <td><span class="badge bg-warning">Processing</span></td>
+                            {% if order.order_status == "delivered" %}
+                              <td><span class="badge bg-success" >{{order.order_status}}</span></td>
+                            {% elif order.order_status == 'processing' %}
+                              <td><span class="badge bg-warning" >{{order.order_status}}</span></td>
                             {% else %}
-                              <td><span class="badge bg-danger">{{order.order_status}}</span></td>
+                              <td><span class="badge bg-danger" >{{order.order_status}}</span></td>
                             {% endif %}
                             <td>${{order.amount}}</td>
                             <td><a href="{% url 'order' order.id %}" class="btn btn-sm btn-primary">View</a></td>
@@ -157,38 +158,44 @@
                 <div class="card-body">
                   <h4 class="card-title mb-4">My Wishlist</h4>
                   <div class="row">
-                    <div class="col-md-6 mb-4">
-                      <div class="card h-100">
-                        <div class="card-body">
-                          {% comment %} <div class="d-flex justify-content-between align-items-start mb-3">
-                            <img src="{% static 'images/product-small-1.jpg' %}" alt="Product" class="img-fluid product-image" style="max-height: 150px;">
-                            <button class="btn btn-link text-danger p-0">
-                              <i class="bi bi-heart-fill"></i>
-                            </button>
-                          </div> {% endcomment %}
-                          <div class="image-holder position-relative">
-                            <a href="">
-                              <img src="{% static 'images/product-small-1.jpg' %}" alt="categories" class="product-image rounded img-fluid">
-                              <button class="btn btn-link text-danger p-0">
-                                <i class="bi bi-heart-fill"></i>
-                              </button>
-                              <div class="rating">
-                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
-                                <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
-                              </div>
-                            </a>
+                    {% for wished in user.wishedproduct_set.all %}
+                      <div class="col-md-6 mb-4 pro-{{wished.id}}">
+                        <div class="card h-100">
+                          <div class="card-body">
+                            <div class="image-holder position-relative">
+                              <a href="{% url 'product' wished.product.slug %}">
+                                <img src="{{wished.product.image.url}}" alt="product" class="product-image rounded img-fluid">
+                                <button class="btn btn-link text-danger p-0 dis-wished" data-index="{{wished.id}}">
+                                  <i class="bi bi-heart-fill"></i>
+                                </button>
+                                <div class="rating">
+                                  {% if wished.product.rating > 0 %}
+                                      {% with " "|center:wished.product.rating as range %}
+                                          {% for _ in range %}
+                                            <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                                          {% endfor %}
+                                      {% endwith %}
+                                  {% else %}
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                  {% endif %}
+                                </div>
+                              </a>
+                            </div>
+                            <h5 class="card-title">{{wished.product.name}}</h5>
+                            {% if wished.product.is_sale %}
+                              <p class="card-text text-muted">${{wished.product.sale_price}}</p>
+                            {% else %}
+                              <p class="card-text text-muted">${{wished.product.price}}</p>
+                            {% endif %}
+                            <button data-index="{{wished.product.id}}" class="btn btn-primary w-100 add-cart-mini">Add to Cart</button>
                           </div>
-                          <h5 class="card-title">Modern Sofa</h5>
-                          <p class="card-text text-muted">$299.99</p>
-                          <button class="btn btn-primary w-100">Add to Cart</button>
                         </div>
                       </div>
-                    </div>
-                    
-                    
+                    {% endfor %}
                     {% comment %} <div class="col-md-4 mb-4">
                       <div class="card h-100">
                         <div class="card-body">
@@ -271,12 +278,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="mb-3">
-                      <div class="form-floating">
-                        <input type="email" class="form-control" name="email" id="id_email" placeholder="Email" value="{{user.email}}" required>
-                        <label for="email">Email</label>
-                      </div>
-                    </div>
+                    
                     <div class="mb-3">
                       <div class="form-floating">
                         <input type="tel" class="form-control" name="username" id="id_usernaem" placeholder="Username" value="{{user.username}}" required>
@@ -377,6 +379,28 @@
     </div>
   </div>
   <script>
+    $(document).on("click",".dis-wished",function(e){
+      e.preventDefault();
+      const t = this
+      $.ajax({
+        type : "POST",
+        url : "{% url 'dis_wish' %}",
+        data : {
+          prId : $(this).data("index"),
+          csrfmiddlewaretoken : "{{ csrf_token }}",
+          action : "post"
+        },
+        success : function(res){
+          let iD = $(t).data("index");
+          document.getElementsByClassName(`pro-${iD}`)[0].style.display = "none";
+          document.getElementById("wished-count").textContent = Number(document.getElementById("wished-count").textContent) - 1;
+        },
+        error : function(xhr,errmg,err){
+          console.log(err);
+        }
+            
+      })
+    })
     $(document).on("click", ".delete-address",function(e){
       e.preventDefault();
       let addressID = $(this).data("index");

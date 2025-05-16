@@ -22,6 +22,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
     rel="stylesheet">
+
 </head>
 
 <body data-bs-theme="dark">
@@ -156,9 +157,9 @@
   <div class="search-popup">
     <div class="search-popup-container">
 
-      <form role="search" method="get" class="form-group" action="">
+      <form role="search" method="get" class="form-group" action="{% url 'search' %}">
         <input type="search" id="search-form" class="form-control border-0 border-bottom"
-          placeholder="Type and press enter" value="" name="s" />
+          placeholder="Type and press enter" value="" name="search" />
         <button type="submit" class="search-submit border-0 position-absolute bg-white"
           style="top: 15px;right: 15px;"><svg class="search" width="24" height="24">
             <use xlink:href="#search"></use>
@@ -169,26 +170,15 @@
 
       <ul class="cat-list">
         <li class="cat-list-item">
-          <a href="#" title="Jackets">Jackets</a>
+          <a href="{% url 'category' 'laptop' %}" title="Laptops">Laptops</a>
         </li>
         <li class="cat-list-item">
-          <a href="#" title="T-shirts">T-shirts</a>
+          <a href="{% url 'category' 'phone' %}" title="Smart Phone">Smart Phone</a>
         </li>
         <li class="cat-list-item">
-          <a href="#" title="Handbags">Handbags</a>
+          <a href="{% url 'category' 'tv' %}" title="Tv">Smart Tv</a>
         </li>
-        <li class="cat-list-item">
-          <a href="#" title="Accessories">Accessories</a>
-        </li>
-        <li class="cat-list-item">
-          <a href="#" title="Cosmetics">Cosmetics</a>
-        </li>
-        <li class="cat-list-item">
-          <a href="#" title="Dresses">Dresses</a>
-        </li>
-        <li class="cat-list-item">
-          <a href="#" title="Jumpsuits">Jumpsuits</a>
-        </li>
+        
       </ul>
 
     </div>
@@ -333,7 +323,7 @@
                   <a class="nav-link" href="#">Collections</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Sale</a>
+                  <a class="nav-link" href="{% url 'sale_products' %}">Sale</a>
                 </li>
                 {% if user.is_authenticated %}
                   <li class="nav-item">
