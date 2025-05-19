@@ -3,7 +3,6 @@ from django.contrib.auth import login , logout , authenticate
 from django.contrib import messages
 from .forms import UserRegisterForm
 from django.http import JsonResponse 
-from payment.models import Order
 
 # OTP
 from .utils import send_email_to_user
@@ -224,13 +223,4 @@ def update_address(request,id):
     
         return render(request,"accounts/update-address.html",{"address":address})
     else:
-        return redirect("login")
-    
-
-def dashbord(request):
-    if request.user.is_authenticated and request.user.is_superuser:
-        pass 
-    
-    else:
-        return redirect("home")
-                
+        return redirect("login")                

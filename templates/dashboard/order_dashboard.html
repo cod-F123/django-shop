@@ -1,0 +1,118 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+  <!-- Account Section -->
+{% if perms.payment.view_order %}
+  <section class="account py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <!-- Sidebar -->
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+          <div class="tab-content">
+
+            <!-- Orders -->
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title mb-0">Orders</h4>
+                    <form action="" method="GET"><input type="text" name="search" value="{{request.GET.search}}" placeholder="search"><button class="btn mx-1">search</button></form>
+                    <form action="" method="GET" class="d-flex"><div class="d-inline mt-1 me-1">{{filter.form.order_status}}</div> <button class="btn">Filter</button></form>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Order ID</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Total</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for order in orders %}
+                          <tr>
+                            <td>#{{order.id}}</td>
+                            <td>{{order.date_ordered}}</td>
+                            
+                            {% if order.order_status == "delivered" %}
+                              <td><span class="badge bg-success" >{{order.order_status}}</span></td>
+                            {% elif order.order_status == 'processing' %}
+                              <td><span class="badge bg-warning" >{{order.order_status}}</span></td>
+                            {% else %}
+                              <td><span class="badge bg-danger" >{{order.order_status}}</span></td>
+                            {% endif %}
+                            <td>${{order.amount}}</td>
+                            <td><a href="{% url 'D_order' order.id %}" class="btn btn-sm btn-primary">View</a></td>
+                          </tr>
+                        {% endfor %}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div> 
+
+
+            <!-- Profile -->
+            {% comment %} {% if perms.user.view_user %}
+              <div class="tab-pane fade" id="profile">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title mb-0">Last Users</h4>
+                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                      View All User
+                    </a>
+                  </div>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Staff</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for user_ in users %}
+                            <tr>
+                              <td>#{{user_.id}}</td>
+                              <td>{{user_.username}}</td>
+                              
+                              
+                              <td>{{user_.email}}</td>
+                              
+                              <td>{{user_.first_name}}</td>
+                              <td>{{user_.last_name}}</td>
+                              {% if user_.is_staff or user_.is_superuser %}
+                              <td><i class="bi bi-check-square-fill"></i></td>
+                              {% else %}
+                              <td><i class="bi bi-x-square-fill"></i></td>
+                              {% endif %}
+                              <td><a href="" class="btn btn-sm btn-primary">View</a></td>
+                            </tr>
+                          {% endfor %}
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %} {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  </script>
+{% endif %}
+{% endblock content %}
