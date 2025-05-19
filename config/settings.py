@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'cart',
     'payment',
     'paypal.standard.ipn',
+    'dashboard',
+    "django_filters",
 ]
 
 MIDDLEWARE = [

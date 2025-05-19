@@ -43,7 +43,10 @@ def product_page(request, slug):
 def shop_page(request):
     products = Product.objects.all()
     categories = Category.objects.all()
-    return render(request,"shop/shop.html",{"products":products,"categories":categories})
+    phones = Product.objects.filter(category__name = "phone")[:10]
+    tvs = Product.objects.filter(category__name = "tv")[:10]
+    laptops = Product.objects.filter(category__name = "laptop")[:10]
+    return render(request,"shop/shop.html",{"products":products,"categories":categories,"phones":phones,"laptops":laptops,"tvs":tvs})
 
 def category_page(request,name):
     category = get_object_or_404(Category,name=name)
@@ -52,7 +55,7 @@ def category_page(request,name):
 
 
 def sale_page(request):
-    products = Product.objects.all()
+    products = Product.objects.all().order_by("-discount")
     
     return render(request,"shop/sale_page.html",{"products":products})
 

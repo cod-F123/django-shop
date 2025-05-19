@@ -1,0 +1,160 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+{% if perms.payment.view_order %}
+    <!-- Cart Section -->
+    <section class="cart py-5">
+        <div class="container">
+            <div class="row">
+                <!-- Cart Items -->
+                <div class="col-lg-8 mb-0 pb-0">
+                    <div class="card">
+                        <div class="card-body">
+                            {% comment %} <h4 class="card-title mb-4 cart-len">Shopping Cart ({{cart|length}} items)</h4> {% endcomment %}
+                            
+                            <!-- Cart Item 1 -->
+                            {% for item in order.orderitem_set.all %}
+                                <div class="cart-item mb-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-4">
+                                            <img src="{{item.product.image.url}}" alt="Product" class="img-fluid ">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h5 class="mb-1">{{item.product.name}}</h5>
+                                            {% if item.product.is_sale %}
+                                                <p class="text-muted mb-0">${{item.product.sale_price}}</p>
+                                            {% else %}
+                                                <p class="text-muted mb-0">${{item.product.price}}</p>
+                                            {% endif %}
+                                            {% comment %} <p class="text-muted mb-0">${{product.sale_price}}</p> {% endcomment %}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{item.quantity}}
+                                        </div>
+                                        
+                                        {% comment %} <div class="col-md-2">
+                                            {% if product.is_sale %}
+                                                <h6 class="mb-0 ms-3">${{product.sale_price}}</h6>
+                                            {% else %}
+                                                <h6 class="mb-0 ms-3">${{product.price}}</h6>
+                                            {% endif %}
+                                        </div>  {% endcomment %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
+                            <hr class="my-4">
+
+                            
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4 cart-len">Address</h4>
+                            
+                            <!-- Cart Item 1 -->
+                        <div class="col-md-6 mb-4">
+                          <div class="card h-100">
+                            <div class="card-body">
+                              <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">{{order.address.address_title}}</h5>
+                                <div>
+                                
+                                </div>
+                              </div>
+                              <p class="card-text">
+                                {{order.address.street}}<br>
+                                {{order.address.city}}<br>
+                                {{order.address.state}}<br>
+                                {{order.address.zip_code}}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+
+                            <hr class="my-4">
+
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Order Summary</h4>
+                            
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Subtotal</span>
+                                <span class="sub-t">${{order.amount}}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Status</span>
+                                <span class="bg-black p-1 rounded">{{order.order_status}}</span>
+                            </div>
+                            {% if order.order_status == "delivered" %}
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Delivered date</span>
+                                    <span>{{order.shiped_date|date:"Y-m-d H:i"}}</span>
+                                </div> 
+                            {% endif %}
+                            <hr>
+                            
+                            <div class="d-flex justify-content-between mb-4">
+                                <strong>Total</strong>
+                                <strong class="text-primary total">${{order.amount}}</strong>
+                            </div>
+
+                            <!-- Coupon Code -->
+                            {% comment %} <div class="mb-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Coupon code">
+                                    <button class="btn btn-primary">Apply</button>
+                                </div>
+                            </div> {% endcomment %}
+                            
+                            {% if perms.payment.change_order %}
+                                <div class="w-100 d-flex justify-content-center rounded text-uppercase fw-bold bg-black py-4 border">
+                                    <span>{{order.order_status}}</span>
+                                </div>
+                                <form action="" method="POST" >
+                                    {% csrf_token %}
+                                    <select name="order_status" class="form-select" id="id_order_status">
+                                        <option value="delivered" selected>Delivered</option>
+                                        <option value="processing" selected>Processing</option>
+                                        <option value="canclled" selected>Canclled</option>
+                                        <option value="pending" selected>Pending</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">change</button>
+                                </form>
+                            {% else %}
+                                <div class="w-100 d-flex justify-content-center rounded text-uppercase fw-bold bg-black py-4 border">
+                                    <span>{{order.order_status}}</span>
+                                </div>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% else %}
+ <div class="container">
+    <div class="row">
+        <div class="col-9">
+            <p class="h4">premission diend! <a href="{% url 'home' %}" class="link ms-1">back home</a></p>
+
+        </div>
+    </div>
+ </div>
+{% endif %}
+
+
+{% endblock content %}
