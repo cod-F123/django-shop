@@ -1,0 +1,428 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+  <!-- Account Section -->
+  <section class="account py-5">
+    <div class="container">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <div class="text-center mb-4">
+                <img src="{{user.profile.image.url}}" alt="Profile" class="rounded-circle mb-3" width="100" height="100">
+                <h5 class="mb-1">{{user.username}}</h5>
+                <p class="text-muted mb-0">{{user.email}}</p>
+              </div>
+              <div class="list-group">
+                <a href="#dashboard" class="list-group-item list-group-item-action active" data-bs-toggle="list">
+                  <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+                <a href="#orders" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                  <i class="bi bi-bag me-2"></i> Orders
+                </a>
+                <a href="#wishlist" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                  <i class="bi bi-heart me-2"></i> Wishlist
+                </a>
+                <a href="#addresses" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                  <i class="bi bi-geo-alt me-2"></i> Addresses
+                </a>
+                <a href="#profile" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                  <i class="bi bi-person me-2"></i> Profile
+                </a>
+                <a href="#password" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                  <i class="bi bi-lock me-2"></i> Change Password
+                </a>
+                <a href="{% url 'logout' %}" class="list-group-item list-group-item-action text-danger">
+                  <i class="bi bi-box-arrow-right me-2"></i> Logout
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+          <div class="tab-content">
+            <!-- Dashboard -->
+            <div class="tab-pane fade show active" id="dashboard">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title mb-4">Dashboard</h4>
+                  <div class="row">
+                    <div class="col-md-4 mb-4">
+                      <div class="card bg-primary text-white">
+                        <div class="card-body">
+                          <h6 class="card-title">Total Orders</h6>
+                          <h2 class="mb-0">{{user.order_set.all.count}}</h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="card bg-success text-white">
+                        <div class="card-body">
+                          <h6 class="card-title">Wishlist Items</h6>
+                          <h2 class="mb-0" id="wished-count">{{user.wishedproduct_set.all.count}}</h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                      <div class="card bg-info text-white">
+                        <div class="card-body">
+                          <h6 class="card-title">Addresses</h6>
+                          <h2 class="mb-0">{{user.addressuser_set.all.count}}</h2>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <h5 class="mb-3">Recent Orders</h5>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Order ID</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Total</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      
+                      <tbody>
+                       {% for order in user.order_set.all %}
+                          <tr>
+                            <td>#{{order.id}}</td>
+                            <td>{{order.date_ordered}}</td>
+                            
+                            {% if order.order_status == "delivered" %}
+                              <td><span class="badge bg-success" >{{order.order_status}}</span></td>
+                            {% elif order.order_status == 'processing' %}
+                              <td><span class="badge bg-warning" >{{order.order_status}}</span></td>
+                            {% else %}
+                              <td><span class="badge bg-danger" >{{order.order_status}}</span></td>
+                            {% endif %}
+                            <td>${{order.amount}}</td>
+                            <td><a href="{% url 'order' order.id %}" class="btn btn-sm btn-primary">View</a></td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Orders -->
+            <div class="tab-pane fade" id="orders">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title mb-4 me-0">My Orders</h4>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Order ID</th>
+                          <th>Date</th>
+                          <th>Status</th>
+                          <th>Total</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for order in user.order_set.all %}
+                          <tr>
+                            <td>#{{order.id}}</td>
+                            <td>{{order.date_ordered}}</td>
+                            
+                            {% if order.order_status == "delivered" %}
+                              <td><span class="badge bg-success" >{{order.order_status}}</span></td>
+                            {% elif order.order_status == 'processing' %}
+                              <td><span class="badge bg-warning" >{{order.order_status}}</span></td>
+                            {% else %}
+                              <td><span class="badge bg-danger" >{{order.order_status}}</span></td>
+                            {% endif %}
+                            <td>${{order.amount}}</td>
+                            <td><a href="{% url 'order' order.id %}" class="btn btn-sm btn-primary">View</a></td>
+                          </tr>
+                        {% endfor %}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Wishlist -->
+            <div class="tab-pane fade" id="wishlist">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title mb-4">My Wishlist</h4>
+                  <div class="row">
+                    {% for wished in user.wishedproduct_set.all %}
+                      <div class="col-md-6 mb-4 pro-{{wished.id}}">
+                        <div class="card h-100">
+                          <div class="card-body">
+                            <div class="image-holder position-relative">
+                              <a href="{% url 'product' wished.product.slug %}">
+                                <img src="{{wished.product.image.url}}" alt="product" class="product-image rounded img-fluid">
+                                <button class="btn btn-link text-danger p-0 dis-wished" data-index="{{wished.id}}">
+                                  <i class="bi bi-heart-fill"></i>
+                                </button>
+                                <div class="rating">
+                                  {% if wished.product.rating > 0 %}
+                                      {% with " "|center:wished.product.rating as range %}
+                                          {% for _ in range %}
+                                            <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                                          {% endfor %}
+                                      {% endwith %}
+                                  {% else %}
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                                  {% endif %}
+                                </div>
+                              </a>
+                            </div>
+                            <h5 class="card-title">{{wished.product.name}}</h5>
+                            {% if wished.product.is_sale %}
+                              <p class="card-text text-muted">${{wished.product.sale_price}}</p>
+                            {% else %}
+                              <p class="card-text text-muted">${{wished.product.price}}</p>
+                            {% endif %}
+                            <button data-index="{{wished.product.id}}" class="btn btn-primary w-100 add-cart-mini">Add to Cart</button>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                    {% comment %} <div class="col-md-4 mb-4">
+                      <div class="card h-100">
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between align-items-start mb-3">
+                            <img src="images/product2.jpg" alt="Product" class="img-fluid" style="max-height: 150px;">
+                            <button class="btn btn-link text-danger p-0">
+                              <i class="bi bi-heart-fill"></i>
+                            </button>
+                          </div>
+                          <h5 class="card-title">Dining Table</h5>
+                          <p class="card-text text-muted">$199.99</p>
+                          <button class="btn btn-primary w-100">Add to Cart</button>
+                        </div>
+                      </div>
+                    </div> {% endcomment %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Addresses -->
+            <div class="tab-pane fade" id="addresses">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title mb-0">My Addresses</h4>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                      <i class="bi bi-plus-lg me-2"></i>Add New Address
+                    </button>
+                  </div>
+                  <div class="row">
+                      {% for address in user.addressuser_set.all %}
+                        <div class="col-md-6 mb-4 address-{{address.id}}">
+                          <div class="card h-100">
+                            <div class="card-body">
+                              <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">{{address.address_title}}</h5>
+                                <div>
+                                  <a href="{% url 'update_address' address.id %}" class="btn btn-link text-primary p-0 me-2">
+                                    <i class="bi bi-pencil"></i>
+                                  </a>
+                                  <button data-index="{{address.id}}" class="btn btn-link text-danger p-0 delete-address">
+                                    <i class="bi bi-trash"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              <p class="card-text">
+                                {{address.street}}<br>
+                                {{address.city}}<br>
+                                {{address.state}}<br>
+                                {{address.zip_code}}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile -->
+            <div class="tab-pane fade" id="profile">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title mb-4">Profile Information</h4>
+                  <form id="profileForm" class="needs-validation" method="POST" action="{% url 'my_account' %}" novalidate>
+                    {% csrf_token %}
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                          <input type="text" class="form-control" name="first_name" id="id_first_name" placeholder="First Name" value="{{user.first_name}}" required>
+                          <label for="firstName">First Name</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                          <input type="text" class="form-control" name="last_name" id="id_last_name" placeholder="Last Name" value="{{user.last_name}}" required>
+                          <label for="lastName">Last Name</label>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <div class="form-floating">
+                        <input type="tel" class="form-control" name="username" id="id_usernaem" placeholder="Username" value="{{user.username}}" required>
+                        <label for="username">Username</label>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Change Password -->
+            <div class="tab-pane fade" id="password">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title mb-4">Change Password</h4>
+                  <form id="passwordForm" class="needs-validation" method="POST" action="{% url 'change_password' %}" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <div class="form-floating">
+                        <input type="password" class="form-control" name="old_password" id="id_old_password" placeholder="Current Password" required>
+                        <label for="id_old_password">Current Password</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-floating">
+                        <input type="password" class="form-control" name="new_password1" id="id_new_password1" placeholder="New Password" required>
+                        <label for="new_password1">New Password</label>
+                      </div>
+                    </div>
+                    <div class="mb-4">
+                      <div class="form-floating">
+                        <input type="password" class="form-control" name="new_password2" id="id_new_password2" placeholder="Confirm Password" required>
+                        <label for="id_new_password2">Confirm Password</label>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Password</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add Address Modal -->
+  <div class="modal fade" id="addAddressModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Address</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addressForm" class="needs-validation" method="POST" action="{% url 'add_address' %}" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+              <div class="form-floating">
+                <input type="text" class="form-control" name="address_title" id="id_address_title" placeholder="Address Title" required>
+                <label for="id_address_title">Address Title</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="form-floating">
+                <input type="text" class="form-control" name="street" id="id_street" placeholder="Street Address" required>
+                <label for="id_street">Street Address</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="form-floating">
+                <input type="text" class="form-control" name="city" id="id_city" placeholder="City" required>
+                <label for="id_city">City</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="form-floating">
+                <input type="text" class="form-control" name="state" id="id_state" placeholder="State" required>
+                <label for="id_state">State</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="form-floating">
+                <input type="text" class="form-control" name="zip_code" id="id_zip_code" placeholder="ZIP Code" required>
+                <label for="id_zip_code">ZIP Code</label>
+              </div>
+            </div>
+            
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" form="addressForm" class="btn btn-primary">Save Address</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).on("click",".dis-wished",function(e){
+      e.preventDefault();
+      const t = this
+      $.ajax({
+        type : "POST",
+        url : "{% url 'dis_wish' %}",
+        data : {
+          prId : $(this).data("index"),
+          csrfmiddlewaretoken : "{{ csrf_token }}",
+          action : "post"
+        },
+        success : function(res){
+          let iD = $(t).data("index");
+          document.getElementsByClassName(`pro-${iD}`)[0].style.display = "none";
+          document.getElementById("wished-count").textContent = Number(document.getElementById("wished-count").textContent) - 1;
+        },
+        error : function(xhr,errmg,err){
+          console.log(err);
+        }
+            
+      })
+    })
+    $(document).on("click", ".delete-address",function(e){
+      e.preventDefault();
+      let addressID = $(this).data("index");
+      console.log("hello");
+      $.ajax({
+        type : 'POST',
+        url : "{% url 'delete_address' %}",
+        data : {
+          address : addressID,
+          csrfmiddlewaretoken : "{{ csrf_token }}",
+          action : "post"
+        },
+        success : function(res){
+          let div = `address-${addressID}`
+          document.getElementsByClassName(div)[0].style.display = "none";
+        },
+        error : function(xhr,errmg ,err){
+          console.log(err);
+        }
+
+      })
+    })
+  </script>
+
+{% endblock content %}

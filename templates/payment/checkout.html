@@ -1,0 +1,48 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-sm-12 col-md-9">
+                <div class="card " style="background-color:rgb(52, 54, 54);">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title mb-0">Select a Address</h4>
+                    
+                  </div>
+                  <div class="row">
+                      {% for address in user.addressuser_set.all %}
+                        <div class="col-md-6 mb-4 address-{{address.id}}">
+                          <div class="card h-100">
+                            <div class="card-body">
+                              <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">{{address.address_title}}</h5>
+                                <div>
+                                    <form method="POST" action="{% url 'pay' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="adrr" value="{{address.id}}">
+                                        <button class="btn btn-link text-success border border-light rounded-pill">
+                                            <i class="bi bi-check-circle"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                              </div>
+                              <p class="card-text">
+                                {{address.street}}<br>
+                                {{address.city}}<br>
+                                {{address.state}}<br>
+                                {{address.zip_code}}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+    

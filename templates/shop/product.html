@@ -1,0 +1,407 @@
+{% extends 'index.html' %}
+{% load my_tags %}
+
+
+{% block content %}
+  <!-- Product Details Section -->
+  <section class="single-product py-5">
+    <div class="container">
+      <div class="row">
+        <!-- Product Gallery -->
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <div class="product-gallery">
+            <div class="swiper product-large-slider">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <img src="{{ product.image.url }}" alt="product" class="img-fluid">
+                </div>
+                {% for image in product.productimage_set.all %}
+                  <div class="swiper-slide">
+                    <img src="{{ image.image.url }}" alt="product" class="img-fluid">
+                  </div>
+                {% endfor %}
+                  
+              </div>
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+            </div>
+            <div class="swiper product-thumb-slider mt-3">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <img src="{{ product.image.url }}" alt="product thumbnail" class="img-fluid">
+                </div>
+                {% for image in product.productimage_set.all %}
+                  <div class="swiper-slide">
+                    <img src="{{ image.image.url }}" alt="product thumbnail" class="img-fluid">
+                  </div>
+                {% endfor %}
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-lg-6">
+          <div class="product-info">
+            <div class="element-header">
+              <h1 class="display-6">{{ product.name }}</h1>
+              <div class="rating d-flex align-items-center gap-2 my-3">
+                <div class="rating-stars">
+                  {% if product.rating > 0 %}
+                      {% with " "|center:product.rating as range %}
+                          {% for _ in range %}
+                            <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                          {% endfor %}
+                      {% endwith %}
+                  {% else %}
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                  {% endif %}
+                  <span>{{product.rating|floatformat:1}}</span>
+                </div>
+                <span class="rating-count">( {{product.comment_set.all.count}} Reviews)</span>
+              </div>
+              <div class="product-price">
+                {% if product.is_sale %}
+                  <span class="fs-3">${{ product.sale_price }}</span>
+                  <span class="old-price text-decoration-line-through ms-3">${{ product.price }}</span>
+                {% else %}
+                  <span class="fs-3">${{product.price}}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="product-description my-5">
+              <p>{{ product.mini_description }}</p>
+              
+            </div>
+
+            <div class="product-actions">
+              <div class="quantity-selector mb-4">
+                <label class="form-label">Quantity</label>
+                <div class="input-group quantity-input">
+                  <button class="btn btn-outline-secondary de-btn" data-index="{{product.id}}" type="button" id="decrease-quantity">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><use xlink:href="#minus"></use></svg>
+                  </button>
+                  <input type="text" class="form-control text-center qty q-{{product.id}}" maxlength="2" value="1" min="1" max="99" id="quantity">
+                  <button class="btn btn-outline-secondary in-btn" data-index="{{product.id}}" type="button" id="increase-quantity">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><use xlink:href="#plus"></use></svg>
+                  </button>
+                </div>
+              </div>
+              <br>
+              <div class="d-flex">
+                <button data-index="{{product.id}}" class="btn btn-primary btn-lg flex-grow-1 add-cart">
+                  <span>Add to cart</span>
+                </button>
+                {% if not user|is_wished:product.id %}
+                    <button data-index="{{product.id}}" class="btn btn-outline-light btn-lg add-wish">
+                      <svg width="24" height="24" viewBox="0 0 24 24"><use xlink:href="#heart"></use></svg>
+                    </button>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="product-meta mt-4">
+              <ul class="list-unstyled mb-0">
+                <li><strong>Category:</strong> <a href="{% url 'category' product.category %}" class="text-decoration-none">{{ product.category }}</a></li>
+                {% comment %} <li><strong>Tags:</strong> <a href="#" class="text-decoration-none">Mobile</a>, <a href="#" class="text-decoration-none">5G</a></li> {% endcomment %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Tabs -->
+      <div class="row mt-5">
+        <div class="col-12">
+          <ul class="nav nav-tabs" id="productTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#description">Description</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#specifications">Specifications</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews">Reviews ( {{product.comment_set.all.count}} )</button>
+            </li>
+          </ul>
+          <div class="tab-content pt-4">
+            <div class="tab-pane fade show active" id="description">
+              <div class="row">
+                <div class="col-md-6">
+                  <h4>Product Description</h4>
+                
+                  <p>{{ product.mini_description|safe }}</p>
+                
+                </div>
+                <div class="col-md-6">
+                  <h4>Key Features</h4>
+                  <ul class="list-unstyled">
+                    {% for feature in product.productfeature_set.all %}
+                      <li> {{feature.feature}}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="specifications">
+              <div class="table-responsive">
+                <table class="table">
+                  <tbody>
+                    {% for detail in product.productdetail_set.all %}
+                      <tr>
+                        <th>{{ detail.product_detailname }}</th>
+                        <td>{{ detail.product_detail }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="reviews">
+              <div class="reviews-wrapper">
+                <!-- Review Form -->
+                <div class="review-form-wrapper mb-5">
+                  <h4>Add a Review</h4>
+                  <form class="review-form" action="." method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label class="form-label">Your Rating</label>
+                      <div class="rating-input">
+                        <span id="rating-number">5</span>
+                        <svg width="20" height="20" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                        <input type="range" min="1" max="5" value="5" name="rating"  id="rating-num">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">Title</label>
+                          <input type="text" name="title" id ="id_title" class="form-control">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Your Review</label>
+                      <textarea class="form-control" name="comment" id="id_comment" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                  </form>
+                </div>
+
+                <!-- Reviews List -->
+                <div class="reviews-list">
+                  <h4>Customer Reviews</h4>
+                  <!-- Single Review -->
+                  {% for comment in product.comment_set.all %}
+                    <div class="review-item border-bottom pb-4 mb-4 ps-2">
+                      <div class="rating mb-2">
+                        {% with " "|center:comment.rating as range %}
+                          {% for _ in range %}
+                            <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                          {% endfor %}
+                        {% endwith %}
+                      </div>
+                      <h5 class="review-title mb-1">{{ comment.title }}</h5>
+                      <p class="review-text">{{ comment.comment }}</p>
+                      <div class="review-meta">
+                        <span class="review-author">{{ comment.user }}</span>
+                        <span class="mx-2">|</span>
+                        <span class="review-date">{{ comment.date_created }}</span>
+                      </div>
+                    </div>
+                  {% endfor %}
+                  <!-- Repeat for more reviews -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Products Section -->
+  {% comment %} <section class="related-products py-5 bg-dark">
+    <div class="container">
+      <h3 class="section-title mb-4">Related Products</h3>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        <!-- Related Product Item -->
+        {% for item in product.category.product_set.all %}
+
+          <div class="col">
+            <div class="product-item hover-effect-slide">
+              <div class="image-holder position-relative">
+                <a href="single-product.html">
+                  <img src="{{ item.image.url }}" alt="product" class="product-image img-fluid">
+                </a>
+                <div class="product-overlay">
+                  <a href="#" class="btn btn-primary w-100 mt-2 rounded-1">Add to cart</a>
+                  <a href="wishlist.html" class="btn btn-outline-light w-100 mt-2 rounded-1">Add to wishlist</a>
+                </div>
+              </div>
+              <div class="product-content">
+                <h5 class="fs-5 mt-3 mb-2">
+                  <a href="single-product.html" class="text-decoration-none">{{ item.name }}</a>
+                </h5>
+                <div class="d-flex justify-content-between align-items-center">
+                  {% if item.is_sale %}
+                    <span class="price">{{ item.sale_price }}</span>
+                  {% else %}
+                    <span class="price">{{ item.price }}</span>
+                  {% endif %}
+                  <div class="rating">
+                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                    <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        <!-- Repeat for more related products -->
+      </div>
+    </div>
+  </section> {% endcomment %}
+  <section id="new-arrival"
+    class="new-arrival py-5">
+    <div class="container-fluid">
+      <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
+        <h4 class="text-uppercase">Related Products</h4>
+        <a href="shop.html" class="btn-link">View All Products</a>
+      </div>
+
+      <div data-aos="fade-in">
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+          
+          {% for item in product.category.product_set.all %}
+            <div class="col">
+              <div class="product-item hover-effect-slide">
+                <div class="image-holder position-relative">
+                  <a href="{% url 'product' item.slug %}">
+                    <img src="{{ item.image.url }}" alt="product" class="product-image img-fluid">
+                    <div class="rating">
+                    {% if item.rating > 0 %}
+                      {% with " "|center:item.rating as range %}
+                          {% for _ in range %}
+                            <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-solid"></use></svg>
+                          {% endfor %}
+                      {% endwith %}
+                    {% else %}
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                      <svg width="14" height="14" viewBox="0 0 15 15"><use xlink:href="#star-outline"></use></svg>
+                    {% endif %}
+                    </div>
+                  </a>
+                  <button href="#" data-index="{{item.id}}" class="btn btn-primary w-100 mt-2 rounded-1 add-cart-mini">Add to cart</button>
+                </div>
+                <div class="product-content d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                  <h5 class="fs-5 mt-3">
+                    <a href="{% url 'product' item.slug %}">{{item.name}}</a>
+                  </h5>
+                  {% if item.is_sale %}
+                    <span> {{ item.sale_price }} $</span>
+                  {% else %}
+                    <span>{{ item.price }} $</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+            
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    let ratingNumber = document.getElementById("rating-number");
+    let ratingNum = document.getElementById("rating-num");
+
+    ratingNum.addEventListener("input",(e)=>{
+      ratingNumber.innerHTML = ratingNum.value;
+    })
+    
+  </script>
+  <script>
+    $(document).on("click",".add-wish",function(e){
+      e.preventDefault();
+      const t = this
+      $.ajax({
+        type : "POST",
+        url : "{% url 'add_wish' %}",
+        data : {
+          prId : $(this).data("index"),
+          csrfmiddlewaretoken : "{{ csrf_token }}",
+          action : "post"
+        },
+        success : function(res){
+          //$(t).addClass("hidden");
+          document.getElementsByClassName("add-wish")[0].style.display = "none";
+        },
+        error : function(xhr,errmg,err){
+          console.log(err);
+        }
+      })
+    })
+
+    $(document).on("click",".add-cart",function(e){
+      e.preventDefault();
+      let productId = $(this).data("index");
+      console.log(productId);
+      let qty = $(".qty").val();
+      console.log(qty);
+
+      $.ajax({
+        type : "POST",
+        url : "{% url 'add_cart' %}",
+        data : {
+          proId : productId,
+          proQty : qty,
+          csrfmiddlewaretoken : "{{csrf_token}}",
+          action : "post"
+        },
+        success : function(res){
+          document.getElementsByClassName("cart-len")[0].innerHTML = res.cart_len
+        },
+        error : function(xhr , errmg , err){
+          console.log(err);
+        }
+      })
+    })
+    $(document).on("click",".in-btn",function(e){
+      e.preventDefault();
+      let indexD = $(this).data("index");
+      let qty = Number($(`.q-${indexD}`).val());
+
+      if(qty < 100){
+        $(`.q-${indexD}`).val(qty + 1);
+      }
+    })
+    $(document).on("click",".de-btn",function(e){
+      e.preventDefault();
+      let indexD = $(this).data("index");
+      let qty = Number($(`.q-${indexD}`).val());
+
+      if(qty > 1){
+        $(`.q-${indexD}`).val(qty - 1);
+      }
+    })
+  </script>
+
+{% endblock content %}
+
+
+   
+

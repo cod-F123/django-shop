@@ -1,0 +1,132 @@
+{% extends 'index.html' %}
+{% block content %}
+
+  <!-- Login Section -->
+  <section class="auth">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+          <div class="card">
+            <div class="card-body">
+              <ul class="nav nav-tabs" id="authTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Login</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab">Sign Up</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="authTabsContent">
+                <!-- Login Form -->
+                <div class="tab-pane fade show active" id="login" role="tabpanel">
+                  <form id="loginForm" method="POST" action="{% url 'login' %}"  class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                      <input type="text" name="username" class="form-control" id="loginUsername" placeholder="username" required>
+                      <label for="loginUsername">username</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="password" name="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                      <label for="loginPassword">Password</label>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                      <a href="{% url 'send_otp' %}" class="text-primary">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                  </form>
+                </div>
+                <!-- Signup Form -->
+                <div class="tab-pane fade" id="signup" role="tabpanel">
+                  <form id="signupForm" class="needs-validation" method="POST" action="{% url 'register' %}" novalidate>
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="id_firstname" name="first_name" placeholder="First Name" required>
+                      <label for="id_firstName">First Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="id_lastname" name="last_name" placeholder="Last Name" required>
+                      <label for="id_lastName">Last Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="id_username" name="username" placeholder="username" required>
+                      <label for="id_username">Username</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="email" class="form-control" id="id_email" name="email" placeholder="Email" required>
+                      <label for="id_email">Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Password" required>
+                      <label for="id_password1">Password</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="password" class="form-control" id="id_password2" name="password2" placeholder="Confirm Password" required>
+                      <label for="id_password2">Confirm Password</label>
+                    </div>
+                    <div class="form-check mb-4">
+                      <input class="form-check-input" type="checkbox" id="terms" required>
+                      <label class="form-check-label" for="terms">
+                        I agree to the <a href="#" class="text-primary">Terms & Conditions</a>
+                      </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    // Form validation
+    /*
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        } else {
+          event.preventDefault();
+          // Show success message
+          const toast = document.createElement('div');
+          toast.className = 'toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-3';
+          toast.setAttribute('role', 'alert');
+          toast.setAttribute('aria-live', 'assertive');
+          toast.setAttribute('aria-atomic', 'true');
+          toast.innerHTML = `
+            <div class="d-flex">
+              <div class="toast-body">
+                ${form.id === 'loginForm' ? 'Login successful' : 'Registration successful'}
+              </div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+          `;
+          document.body.appendChild(toast);
+          const bsToast = new bootstrap.Toast(toast);
+          bsToast.show();
+          
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            window.location.href = form.id === 'loginForm' ? 'index.html' : 'login.html';
+          }, 2000);
+        }
+        form.classList.add('was-validated');
+      });
+    });
+            */
+    // Password confirmation validation
+    const confirmPassword = document.getElementById('confirmPassword');
+    const signupPassword = document.getElementById('signupPassword');
+    confirmPassword.addEventListener('input', () => {
+      if (confirmPassword.value !== signupPassword.value) {
+        confirmPassword.setCustomValidity('Passwords do not match');
+      } else {
+        confirmPassword.setCustomValidity('');
+      }
+    });
+  </script>
+{% endblock content %}

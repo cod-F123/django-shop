@@ -1,0 +1,55 @@
+{% extends 'index.html' %}
+{% block content %}
+
+  <!-- Login Section -->
+  <section class="auth">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+          <div class="card">
+            <div class="card-body">
+              <ul class="nav nav-tabs" id="authTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Login</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="authTabsContent">
+                <!-- Login Form -->
+                <div class="tab-pane fade show active" id="login" role="tabpanel">
+                  <form id="loginForm" method="POST" action="."  class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                      <input type="text" name="address_title" class="form-control" value="{{address.address_title}}" id="id_address_title" placeholder="address title" required>
+                      <label for="id_address_title">Address Title</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="text" name="street" class="form-control" value="{{address.street}}" id="id_street" placeholder="street" required>
+                      <label for="id_street">Street</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="text" name="city" class="form-control" value="{{address.city}}" id="id_city" placeholder="city" required>
+                      <label for="id_city">City</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="text" name="state" class="form-control" value="{{address.state}}" id="id_state" placeholder="state" required>
+                      <label for="id_state">State</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="text" name="zip_code" class="form-control" value="{{address.zip_code}}" id="id_zip_code" placeholder="zip code" required>
+                      <label for="id_zip_code">Zip code</label>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-3">Update</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+{% endblock content %}
