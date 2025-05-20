@@ -8,8 +8,6 @@ from django.utils import timezone
 from paypal.standard.ipn.models import PayPalIPN
 
 # Create your models here.
-class Payment(models.Model):
-    ipn = models.ForeignKey(PayPalIPN, on_delete=models.SET_NULL, null=True)
 
 class Order(models.Model):
     STATUS_ORDER = (

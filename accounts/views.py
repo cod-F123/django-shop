@@ -7,7 +7,8 @@ from django.http import JsonResponse
 # OTP
 from .utils import send_email_to_user
 from django.contrib.auth.models import User
-import random
+from .models import UserOtp
+from  django.utils import timezone
 
 # Profile User
 from .models import AddressUser
@@ -54,23 +55,7 @@ def logout_user(request):
     
     return redirect("home")
 
-users = {}
-def create_code(email):
-    user = users.get(email,None)
-    if user is None:
-        random_number = random.randint(10000,99999)
-        
-        users[email] = random_number
-    
-        return random_number
-    
-    return redirect("verifi_otp")
 
-def verifi_otp(current_otp,otp):
-    if current_otp == otp:
-        return True
-    else:
-        return False
 
 # Login with otp email
 def login_with_otp(request):
@@ -78,10 +63,14 @@ def login_with_otp(request):
         email = request.POST.get("email")
         user = User.objects.filter(email=email).first()
         if user is not None:
-            random_num = create_code(email)
-            send_email_to_user("security code",random_num,[email])
-            
-            request.session["user_email_otp"] = email
+            if not UserOtp.objects.filter(email=email).exists():
+                user_otp = UserOtp.objects.create(email=user.email)
+                
+                # send_email_to_user("security code",user_otp.otp)
+                
+                messages.success(request,user_otp.otp)
+                
+                request.session["user_email_otp"] = email
             return redirect("verifi_otp")
             
     
@@ -93,16 +82,30 @@ def verification_otp(request):
     
     user = User.objects.get(email = request.session["user_email_otp"])
     
-    user_otp = users.get(user.email)
+    user_otp = UserOtp.objects.filter(email = user.email).first()
     
     if request.method == 'POST':
-        otp = request.POST.get("otp")
         
-        verifi = verifi_otp(user_otp,otp)
-        
-        if verifi:
-            login(request,user)
-            return redirect("home")
+        if user_otp is not None:
+            
+            if user_otp.date_deleted > timezone.now():
+                
+                otp = request.POST.get("otp")
+                
+                if user_otp.otp == str(otp):
+                    
+                    login(request,user)
+                    
+                    del request.session['user_email_otp']
+                    user_otp.delete()
+                    
+                    return redirect("home")
+                else:
+                    return redirect("verifi_otp")
+            else:
+                del request.session['user_email_otp']
+                user_otp.delete()
+        return redirect("send_otp")
     
     return render(request,"accounts/verifi_otp.html",{})
 
