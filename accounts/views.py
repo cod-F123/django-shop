@@ -66,7 +66,7 @@ def login_with_otp(request):
             if not UserOtp.objects.filter(email=email).exists():
                 user_otp = UserOtp.objects.create(email=user.email)
                 
-                # send_email_to_user("security code",user_otp.otp)
+                # send_email_to_user("security code",user_otp.otp.user.email)
                 
                 messages.success(request,user_otp.otp)
                 
