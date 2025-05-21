@@ -24,8 +24,8 @@ class Order(models.Model):
     shiped_date = models.DateTimeField(blank=True,null=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
     date_payed = models.DateTimeField(blank=True,null=True)
-    invoice = models.CharField(blank=True,null=True)
-    payer_id = models.CharField(blank=True,null=True)
+    invoice = models.CharField(max_length=255,blank=True,null=True)
+    payer_id = models.CharField(max_length=255,blank=True,null=True)
     
     order_status = models.CharField(choices=STATUS_ORDER,default="pending")
     
