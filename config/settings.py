@@ -155,6 +155,6 @@ EMAIL_CONNECTION_TIMEOUT = 10
 
 
 # Paypal Config
-load_dotenv(str(BASE_DIR/".env"))
-PAYPAL_RECEIVER_EMAIL = os.getenv("PAYPAL_RECEIVER_EMAIL")
+# load_dotenv(str(BASE_DIR/".env"))
+PAYPAL_RECEIVER_EMAIL = "add your receiver email" #os.getenv("PAYPAL_RECEIVER_EMAIL")
 PAYPAL_TEST = True
