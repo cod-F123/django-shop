@@ -1,6 +1,6 @@
 # E-Commerce Website with Django
 
-![Project Preview](https://elshop.pythonanywhere.com)
+!(https://elshop.pythonanywhere.com)
 
 A fully functional e-commerce website built with Django framework, featuring HTML, CSS, JavaScript for frontend and MySQL for database management.
 
